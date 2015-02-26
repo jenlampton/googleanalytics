@@ -1,6 +1,8 @@
 (function ($) {
 
-Drupal.googleanalytics = {};
+"use strict";
+
+Backdrop.googleanalytics = {};
 
 $(document).ready(function() {
 
@@ -12,29 +14,29 @@ $(document).ready(function() {
     $(event.target).closest("a,area").each(function() {
 
       // Is the clicked URL internal?
-      if (Drupal.googleanalytics.isInternal(this.href)) {
+      if (Backdrop.googleanalytics.isInternal(this.href)) {
         // Skip 'click' tracking, if custom tracking events are bound.
         if ($(this).is('.colorbox')) {
           // Do nothing here. The custom event will handle all tracking.
           //console.info("Click on .colorbox item has been detected.");
         }
         // Is download tracking activated and the file extension configured for download tracking?
-        else if (Drupal.settings.googleanalytics.trackDownload && Drupal.googleanalytics.isDownload(this.href)) {
+        else if (Backdrop.settings.googleanalytics.trackDownload && Backdrop.googleanalytics.isDownload(this.href)) {
           // Download link clicked.
-          ga("send", "event", "Downloads", Drupal.googleanalytics.getDownloadExtension(this.href).toUpperCase(), Drupal.googleanalytics.getPageUrl(this.href));
+          ga("send", "event", "Downloads", Backdrop.googleanalytics.getDownloadExtension(this.href).toUpperCase(), Backdrop.googleanalytics.getPageUrl(this.href));
         }
-        else if (Drupal.googleanalytics.isInternalSpecial(this.href)) {
+        else if (Backdrop.googleanalytics.isInternalSpecial(this.href)) {
           // Keep the internal URL for Google Analytics website overlay intact.
-          ga("send", "pageview", { "page": Drupal.googleanalytics.getPageUrl(this.href) });
+          ga("send", "pageview", { "page": Backdrop.googleanalytics.getPageUrl(this.href) });
         }
       }
       else {
-        if (Drupal.settings.googleanalytics.trackMailto && $(this).is("a[href^='mailto:'],area[href^='mailto:']")) {
+        if (Backdrop.settings.googleanalytics.trackMailto && $(this).is("a[href^='mailto:'],area[href^='mailto:']")) {
           // Mailto link clicked.
           ga("send", "event", "Mails", "Click", this.href.substring(7));
         }
-        else if (Drupal.settings.googleanalytics.trackOutbound && this.href.match(/^\w+:\/\//i)) {
-          if (Drupal.settings.googleanalytics.trackDomainMode != 2 || (Drupal.settings.googleanalytics.trackDomainMode == 2 && !Drupal.googleanalytics.isCrossDomain(this.hostname, Drupal.settings.googleanalytics.trackCrossDomains))) {
+        else if (Backdrop.settings.googleanalytics.trackOutbound && this.href.match(/^\w+:\/\//i)) {
+          if (Backdrop.settings.googleanalytics.trackDomainMode != 2 || (Backdrop.settings.googleanalytics.trackDomainMode == 2 && !Backdrop.googleanalytics.isCrossDomain(this.hostname, Backdrop.settings.googleanalytics.trackCrossDomains))) {
             // External link clicked / No top-level cross domain clicked.
             ga("send", "event", "Outbound links", "Click", this.href);
           }
@@ -44,7 +46,7 @@ $(document).ready(function() {
   });
 
   // Track hash changes as unique pageviews, if this option has been enabled.
-  if (Drupal.settings.googleanalytics.trackUrlFragments) {
+  if (Backdrop.settings.googleanalytics.trackUrlFragments) {
     window.onhashchange = function() {
       ga('send', 'pageview', location.pathname + location.search + location.hash);
     }
@@ -55,7 +57,7 @@ $(document).ready(function() {
   $(document).bind("cbox_complete", function () {
     var href = $.colorbox.element().attr("href");
     if (href) {
-      ga("send", "pageview", { "page": Drupal.googleanalytics.getPageUrl(href) });
+      ga("send", "pageview", { "page": Backdrop.googleanalytics.getPageUrl(href) });
     }
   });
 
@@ -71,7 +73,7 @@ $(document).ready(function() {
  *
  * @return boolean
  */
-Drupal.googleanalytics.isCrossDomain = function (hostname, crossDomains) {
+Backdrop.googleanalytics.isCrossDomain = function (hostname, crossDomains) {
   /**
    * jQuery < 1.6.3 bug: $.inArray crushes IE6 and Chrome if second argument is
    * `null` or `undefined`, http://bugs.jquery.com/ticket/10076,
@@ -95,8 +97,8 @@ Drupal.googleanalytics.isCrossDomain = function (hostname, crossDomains) {
  *
  * @return boolean
  */
-Drupal.googleanalytics.isDownload = function (url) {
-  var isDownload = new RegExp("\\.(" + Drupal.settings.googleanalytics.trackDownloadExtensions + ")([\?#].*)?$", "i");
+Backdrop.googleanalytics.isDownload = function (url) {
+  var isDownload = new RegExp("\\.(" + Backdrop.settings.googleanalytics.trackDownloadExtensions + ")([\?#].*)?$", "i");
   return isDownload.test(url);
 };
 
@@ -108,7 +110,7 @@ Drupal.googleanalytics.isDownload = function (url) {
  *
  * @return boolean
  */
-Drupal.googleanalytics.isInternal = function (url) {
+Backdrop.googleanalytics.isInternal = function (url) {
   var isInternal = new RegExp("^(https?):\/\/" + window.location.host, "i");
   return isInternal.test(url);
 };
@@ -124,7 +126,7 @@ Drupal.googleanalytics.isInternal = function (url) {
  *
  * @return boolean
  */
-Drupal.googleanalytics.isInternalSpecial = function (url) {
+Backdrop.googleanalytics.isInternalSpecial = function (url) {
   var isInternalSpecial = new RegExp("(\/go\/.*)$", "i");
   return isInternalSpecial.test(url);
 };
@@ -142,7 +144,7 @@ Drupal.googleanalytics.isInternalSpecial = function (url) {
  * @return string
  *   Internal website URL
  */
-Drupal.googleanalytics.getPageUrl = function (url) {
+Backdrop.googleanalytics.getPageUrl = function (url) {
   var extractInternalUrl = new RegExp("^(https?):\/\/" + window.location.host, "i");
   return url.replace(extractInternalUrl, '');
 };
@@ -156,8 +158,8 @@ Drupal.googleanalytics.getPageUrl = function (url) {
  * @return string
  *   The file extension of the passed url. e.g. "zip", "txt"
  */
-Drupal.googleanalytics.getDownloadExtension = function (url) {
-  var extractDownloadextension = new RegExp("\\.(" + Drupal.settings.googleanalytics.trackDownloadExtensions + ")([\?#].*)?$", "i");
+Backdrop.googleanalytics.getDownloadExtension = function (url) {
+  var extractDownloadextension = new RegExp("\\.(" + Backdrop.settings.googleanalytics.trackDownloadExtensions + ")([\?#].*)?$", "i");
   var extension = extractDownloadextension.exec(url);
   return (extension === null) ? '' : extension[1];
 };

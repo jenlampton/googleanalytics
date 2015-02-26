@@ -542,7 +542,7 @@ function googleanalytics_admin_settings_form_submit($form, &$form_state) {
   $config->set('visibility_pages', (int) $form_state['values']['googleanalytics_visibility_pages']);
   $config->set('pages', $form_state['values']['googleanalytics_pages']);
   $config->set('visibility_roles', (int) $form_state['values']['googleanalytics_visibility_roles']);
-  $config->set('roles', $form_state['values']['googleanalytics_roles']);
+  $config->set('roles', array_keys(array_filter($form_state['values']['googleanalytics_roles'])));
   $config->set('custom', $form_state['values']['googleanalytics_custom']);
   $config->set('trackuserid', (bool) $form_state['values']['googleanalytics_trackuserid']);
   $config->set('trackoutbound', (bool) $form_state['values']['googleanalytics_trackoutbound']);
@@ -747,8 +747,6 @@ function googleanalytics_validate_create_field_values(&$element, &$form_state) {
  *
  * @return array|null
  *   The array of extracted key/value pairs, or NULL if the string is invalid.
- *
- * @see \Drupal\options\Plugin\Field\FieldType\ListTextItem::allowedValuesString()
  */
 function _googleanalytics_extract_create_field_values($string) {
   $values = array();

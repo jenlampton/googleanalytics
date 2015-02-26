@@ -22,7 +22,8 @@ function googleanalytics_requirements($phase) {
 
   if ($phase == 'runtime') {
     // Raise warning if Google user account has not been set yet.
-    if (!preg_match('/^UA-\d+-\d+$/', variable_get('googleanalytics_account', 'UA-'))) {
+    $ga_config = config('googleanalytics.settings');
+    if (!preg_match('/^UA-\d+-\d+$/', $ga_config->get('account'))) {
       $requirements['googleanalytics_account'] = array(
         'title' => $t('Google Analytics module'),
         'description' => $t('Google Analytics module has not been configured yet. Please configure its settings from the <a href="@url">Google Analytics settings page</a>.', array('@url' => url('admin/config/system/googleanalytics'))),
@@ -32,7 +33,7 @@ function googleanalytics_requirements($phase) {
     }
 
     // Raise warning if debugging is enabled.
-    if (variable_get('googleanalytics_debug', 0)) {
+    if ($ga_config->get('debug')) {
       $requirements['google_analytics_debugging'] = array(
         'title' => $t('Google Analytics module'),
         'description' => $t('Google Analytics module has debugging enabled. Please disable debugging setting in production sites from the <a href="@url">Google Analytics settings page</a>.', array('@url' => url('admin/config/system/googleanalytics'))),
@@ -50,13 +51,14 @@ function googleanalytics_requirements($phase) {
  */
 function googleanalytics_update_1001() {
   $config = config('googleanalytics.settings');
+  $config->set('_config_static', TRUE); // Enable static caching for this file.
   $config->set('account', update_variable_get('googleanalytics_account', 'UA-'));
   $config->set('domain_mode', update_variable_get('googleanalytics_domain_mode', 0));
   $config->set('cross_domains', update_variable_get('googleanalytics_cross_domains', ''));
   $config->set('visibility_pages', update_variable_get('googleanalytics_visibility_pages', ''));
   $config->set('pages', update_variable_get('googleanalytics_pages', ''));
   $config->set('visibility_roles', update_variable_get('googleanalytics_visibility_roles', 0));
-  $config->set('roles', update_variable_get('googleanalytics_roles', array()));
+  $config->set('roles', array_keys(array_filter(update_variable_get('googleanalytics_roles', array()))));
   $config->set('custom', update_variable_get('googleanalytics_custom', 0));
   $config->set('trackuserid', update_variable_get('googleanalytics_trackuserid', FALSE));
   $config->set('trackoutbound', update_variable_get('googleanalytics_trackoutbound', TRUE));

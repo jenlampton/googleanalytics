@@ -1,16 +1,13 @@
 {
     "_config_name": "googleanalytics.settings",
+    "_config_static": true,
     "account": "UA-",
     "domain_mode": 0,
     "cross_domains": "",
     "visibility_pages": 0,
     "pages": "admin\r\nadmin/*\r\nbatch\r\nnode/add*\r\nnode/*/*\r\nuser/*/*",
-    "visibility_roles": 1,
-    "roles": {
-        "anonymous": 0,
-        "authenticated": 0,
-        "administrator": 0
-    },
+    "visibility_roles": 0,
+    "roles": [],
     "custom": "0",
     "trackuserid": false,
     "trackoutbound": true,

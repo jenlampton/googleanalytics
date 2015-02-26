@@ -1,129 +1,131 @@
 (function ($) {
 
+"use strict";
+
 /**
  * Provide the summary information for the tracking settings vertical tabs.
  */
-Drupal.behaviors.trackingSettingsSummary = {
+Backdrop.behaviors.trackingSettingsSummary = {
   attach: function (context) {
-    // Make sure this behavior is processed only if drupalSetSummary is defined.
-    if (typeof jQuery.fn.drupalSetSummary == 'undefined') {
+    // Make sure this behavior is processed only if backdropSetSummary is defined.
+    if (typeof jQuery.fn.backdropSetSummary == 'undefined') {
       return;
     }
 
-    $('fieldset#edit-page-vis-settings', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-page-vis-settings', context).backdropSetSummary(function (context) {
       var $radio = $('input[name="googleanalytics_visibility_pages"]:checked', context);
       if ($radio.val() == 0) {
         if (!$('textarea[name="googleanalytics_pages"]', context).val()) {
-          return Drupal.t('Not restricted');
+          return Backdrop.t('Not restricted');
         }
         else {
-          return Drupal.t('All pages with exceptions');
+          return Backdrop.t('All pages with exceptions');
         }
       }
       else {
-        return Drupal.t('Restricted to certain pages');
+        return Backdrop.t('Restricted to certain pages');
       }
     });
 
-    $('fieldset#edit-role-vis-settings', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-role-vis-settings', context).backdropSetSummary(function (context) {
       var vals = [];
       $('input[type="checkbox"]:checked', context).each(function () {
         vals.push($.trim($(this).next('label').text()));
       });
       if (!vals.length) {
-        return Drupal.t('Not restricted');
+        return Backdrop.t('Not restricted');
       }
       else if ($('input[name="googleanalytics_visibility_roles"]:checked', context).val() == 1) {
-        return Drupal.t('Excepted: @roles', {'@roles' : vals.join(', ')});
+        return Backdrop.t('Excepted: @roles', {'@roles' : vals.join(', ')});
       }
       else {
         return vals.join(', ');
       }
     });
 
-    $('fieldset#edit-user-vis-settings', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-user-vis-settings', context).backdropSetSummary(function (context) {
       var $radio = $('input[name="googleanalytics_custom"]:checked', context);
       if ($radio.val() == 0) {
-        return Drupal.t('Not customizable');
+        return Backdrop.t('Not customizable');
       }
       else if ($radio.val() == 1) {
-        return Drupal.t('On by default with opt out');
+        return Backdrop.t('On by default with opt out');
       }
       else {
-        return Drupal.t('Off by default with opt in');
+        return Backdrop.t('Off by default with opt in');
       }
     });
 
-    $('fieldset#edit-linktracking', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-linktracking', context).backdropSetSummary(function (context) {
       var vals = [];
       if ($('input#edit-googleanalytics-trackoutbound', context).is(':checked')) {
-        vals.push(Drupal.t('Outbound links'));
+        vals.push(Backdrop.t('Outbound links'));
       }
       if ($('input#edit-googleanalytics-trackmailto', context).is(':checked')) {
-        vals.push(Drupal.t('Mailto links'));
+        vals.push(Backdrop.t('Mailto links'));
       }
       if ($('input#edit-googleanalytics-trackfiles', context).is(':checked')) {
-        vals.push(Drupal.t('Downloads'));
+        vals.push(Backdrop.t('Downloads'));
       }
       if (!vals.length) {
-        return Drupal.t('Not tracked');
+        return Backdrop.t('Not tracked');
       }
-      return Drupal.t('@items enabled', {'@items' : vals.join(', ')});
+      return Backdrop.t('@items enabled', {'@items' : vals.join(', ')});
     });
 
-    $('fieldset#edit-messagetracking', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-messagetracking', context).backdropSetSummary(function (context) {
       var vals = [];
       $('input[type="checkbox"]:checked', context).each(function () {
         vals.push($.trim($(this).next('label').text()));
       });
       if (!vals.length) {
-        return Drupal.t('Not tracked');
+        return Backdrop.t('Not tracked');
       }
-      return Drupal.t('@items enabled', {'@items' : vals.join(', ')});
+      return Backdrop.t('@items enabled', {'@items' : vals.join(', ')});
     });
 
-    $('fieldset#edit-search-and-advertising', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-search-and-advertising', context).backdropSetSummary(function (context) {
       var vals = [];
       if ($('input#edit-googleanalytics-site-search', context).is(':checked')) {
-        vals.push(Drupal.t('Site search'));
+        vals.push(Backdrop.t('Site search'));
       }
       if ($('input#edit-googleanalytics-trackadsense', context).is(':checked')) {
-        vals.push(Drupal.t('AdSense ads'));
+        vals.push(Backdrop.t('AdSense ads'));
       }
       if ($('input#edit-googleanalytics-trackdoubleclick', context).is(':checked')) {
-        vals.push(Drupal.t('Display features'));
+        vals.push(Backdrop.t('Display features'));
       }
       if (!vals.length) {
-        return Drupal.t('Not tracked');
+        return Backdrop.t('Not tracked');
       }
-      return Drupal.t('@items enabled', {'@items' : vals.join(', ')});
+      return Backdrop.t('@items enabled', {'@items' : vals.join(', ')});
     });
 
-    $('fieldset#edit-domain-tracking', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-domain-tracking', context).backdropSetSummary(function (context) {
       var $radio = $('input[name="googleanalytics_domain_mode"]:checked', context);
       if ($radio.val() == 0) {
-        return Drupal.t('A single domain');
+        return Backdrop.t('A single domain');
       }
       else if ($radio.val() == 1) {
-        return Drupal.t('One domain with multiple subdomains');
+        return Backdrop.t('One domain with multiple subdomains');
       }
       else {
-        return Drupal.t('Multiple top-level domains');
+        return Backdrop.t('Multiple top-level domains');
       }
     });
 
-    $('fieldset#edit-privacy', context).drupalSetSummary(function (context) {
+    $('fieldset#edit-privacy', context).backdropSetSummary(function (context) {
       var vals = [];
       if ($('input#edit-googleanalytics-tracker-anonymizeip', context).is(':checked')) {
-        vals.push(Drupal.t('Anonymize IP'));
+        vals.push(Backdrop.t('Anonymize IP'));
       }
       if ($('input#edit-googleanalytics-privacy-donottrack', context).is(':checked')) {
-        vals.push(Drupal.t('Universal web tracking opt-out'));
+        vals.push(Backdrop.t('Universal web tracking opt-out'));
       }
       if (!vals.length) {
-        return Drupal.t('No privacy');
+        return Backdrop.t('No privacy');
       }
-      return Drupal.t('@items enabled', {'@items' : vals.join(', ')});
+      return Backdrop.t('@items enabled', {'@items' : vals.join(', ')});
     });
   }
 };
