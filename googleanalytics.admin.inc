@@ -571,6 +571,8 @@ function googleanalytics_admin_settings_form_submit($form, &$form_state) {
   }
 
   $config->save();
+
+  backdrop_set_message(t('The configuration options have been saved.'));
 }
 
 /**
