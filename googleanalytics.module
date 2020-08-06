@@ -81,6 +81,20 @@ function googleanalytics_menu() {
 }
 
 /**
+ * Implements hook_preprocess_page().
+ *
+ * Adds a link tag to preconnect to google.
+ */
+function googleanalytics_preprocess_page(&$variables) {
+  $attributes = array(
+    'rel' => 'preconnect',
+    'href' => 'https://www.google-analytics.com',
+    'crossorigin' => 'crossorigin',
+  );
+  backdrop_add_html_head_link($attributes);
+}
+
+/**
  * Implements hook_preprocess_layout().
  *
  * Insert JavaScript to the appropriate scope/region of the page.
@@ -348,6 +362,23 @@ function googleanalytics_preprocess_layout() {
 
     backdrop_add_js($script, array('scope' => 'header', 'type' => 'inline'));
   }
+}
+
+/**
+ * Generate user id hash to implement USER_ID.
+ *
+ * The USER_ID value should be a unique, persistent, and non-personally
+ * identifiable string identifier that represents a user or signed-in
+ * account across devices.
+ *
+ * @param int $uid
+ *   User id.
+ *
+ * @return string
+ *   User id hash.
+ */
+function google_analytics_user_id_hash($uid) {
+  return drupal_hmac_base64($uid, drupal_get_private_key() . drupal_get_hash_salt());
 }
 
 /**
